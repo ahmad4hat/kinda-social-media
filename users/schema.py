@@ -1,11 +1,44 @@
 from django.contrib.auth import get_user_model
 from graphene_django import DjangoObjectType
+from .models import Friend
 import graphene
 
 
 class UserType(DjangoObjectType):
     class Meta:
         model = get_user_model()
+
+
+class FriendType(DjangoObjectType):
+    class Meta:
+        model = Friend
+
+
+class AddFriend(graphene.Mutation):
+    user = graphene.Field(UserType)
+    friend = graphene.Field(UserType)
+
+    class Arguments:
+        id = graphene.Int(required=True)
+
+    def mutate(self, info, id):
+        current_user = info.context.user
+        if current_user.is_anonymous:
+            raise Exception("user not logged in")
+        friend = get_user_model().objects.get(id=id)
+
+        friend1 = Friend.objects.create(
+            user=friend,
+            friend=current_user
+        )
+        friend2 = Friend.objects.create(
+            user=current_user,
+            friend=friend
+        )
+        friend1.save()
+        friend2.save()
+
+        return AddFriend(user=current_user, friend=friend)
 
 
 class Query(graphene.ObjectType):
@@ -17,10 +50,10 @@ class Query(graphene.ObjectType):
         return get_user_model().objects.get(id=id)
 
     def resolve_me(self, info):
-        user = info.context.user
-        if user.is_anonymous:
+        current_user = info.context.user
+        if current_user.is_anonymous:
             raise Exception("user not logged in")
-        return user
+        return current_user
 
 
 class CreateUser(graphene.Mutation):
@@ -43,3 +76,4 @@ class CreateUser(graphene.Mutation):
 
 class Mutation(graphene.ObjectType):
     create_user = CreateUser.Field()
+    add_friend = AddFriend.Field()
