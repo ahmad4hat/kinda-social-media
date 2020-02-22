@@ -23,10 +23,13 @@ class AddFriend(graphene.Mutation):
 
     def mutate(self, info, id):
         current_user = info.context.user
+
         if current_user.is_anonymous:
             raise Exception("user not logged in")
         friend = get_user_model().objects.get(id=id)
 
+        print(current_user.username)
+        print(friend.username)
         friend1 = Friend.objects.create(
             user=friend,
             friend=current_user
@@ -39,6 +42,56 @@ class AddFriend(graphene.Mutation):
         friend2.save()
 
         return AddFriend(user=current_user, friend=friend)
+
+
+class RemoveFriend(graphene.Mutation):
+    friend_id = graphene.Int()
+
+    class Arguments:
+        friend_id = graphene.Int(required=True)
+
+    def mutate(self, info, friend_id):
+        current_user = info.context.user
+        if current_user.is_anonymous:
+            raise Exception("user not logged in")
+
+        print("here 1 after authentication")
+
+        friend = get_user_model().objects.get(id=friend_id)
+        userFriendList = Friend.objects.get(
+            friend_id=friend_id, user_id=current_user.id)
+
+        friendFriendList = Friend.objects.get(
+            friend_id=current_user.id, user_id=friend_id)
+
+        a = current_user.friends.filter(id=friendFriendList.id)
+        b = friend.friends.filter(id=userFriendList.id)
+        a.delete()
+        b.delete()
+
+        # print(a)
+        # print(b)
+
+        current_user.save()
+        # friend.friends.remove()
+
+        # current_user.save()
+        # friend.save()
+
+        # userFriendList.remove()
+        # friendFriendList.remove()
+        print(current_user.friends.all())
+
+        # print(userFriendList.user_id)
+        # print(friendFriendList.user_id)
+
+        # friend_1 = Friend.objects.get(user=current_user, friend=friend)
+        # friend_2 = Friend.objects.get(user=friend, friend=current_user)
+        # friend_1.remove()
+        # friend_2.remove()
+        # print(friend_2.user.friends)
+
+        return RemoveFriend(friend_id)
 
 
 class Query(graphene.ObjectType):
@@ -77,3 +130,4 @@ class CreateUser(graphene.Mutation):
 class Mutation(graphene.ObjectType):
     create_user = CreateUser.Field()
     add_friend = AddFriend.Field()
+    remove_friend = RemoveFriend.Field()
