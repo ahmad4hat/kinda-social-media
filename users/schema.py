@@ -127,7 +127,31 @@ class CreateUser(graphene.Mutation):
         return CreateUser(user)
 
 
+class DeleteOwnAccount(graphene.Mutation):
+    message = graphene.String()
+
+    class Arguments:
+        is_deleteing = graphene.Boolean(required=True)
+
+    def mutate(self, info, is_deleteing):
+        # if is_deleteing:
+        #     current_user = info.context.user
+        #     if current_user.is_anonymous:
+        #         raise Exception("user not logged in")
+        #     current_user.remove()
+
+        #     return DeleteOwnAccount(message="successfully deleted own account")
+        # return DeleteOwnAccount(message="failure")
+        current_user = info.context.user
+        if current_user.is_anonymous:
+            raise Exception("user not logged in")
+        current_user.is_active = False
+        current_user.save()
+        return DeleteOwnAccount(message="successfully deleted own account")
+
+
 class Mutation(graphene.ObjectType):
     create_user = CreateUser.Field()
     add_friend = AddFriend.Field()
     remove_friend = RemoveFriend.Field()
+    delete_account = DeleteOwnAccount.Field()
