@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-import django.utils.timezone as timez
+from django.utils.timezone import now
 
 
 # Create your models here.
@@ -8,7 +8,7 @@ class Item (models.Model):
     type = models.CharField(max_length=30)
     by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     text = models.TextField()
-    date = models.DateTimeField(default=timez.now)
+    date = models.DateTimeField(default=now)
     parent = models.ForeignKey(
         'self', on_delete=models.CASCADE, null=True, blank=True)
     deactivate = models.BooleanField(default=False)
