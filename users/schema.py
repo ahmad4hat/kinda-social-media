@@ -68,28 +68,9 @@ class RemoveFriend(graphene.Mutation):
         b = friend.friends.filter(id=userFriendList.id)
         a.delete()
         b.delete()
-
-        # print(a)
-        # print(b)
-
         current_user.save()
-        # friend.friends.remove()
-
-        # current_user.save()
-        # friend.save()
-
-        # userFriendList.remove()
-        # friendFriendList.remove()
+ 
         print(current_user.friends.all())
-
-        # print(userFriendList.user_id)
-        # print(friendFriendList.user_id)
-
-        # friend_1 = Friend.objects.get(user=current_user, friend=friend)
-        # friend_2 = Friend.objects.get(user=friend, friend=current_user)
-        # friend_1.remove()
-        # friend_2.remove()
-        # print(friend_2.user.friends)
 
         return RemoveFriend(friend_id)
 
@@ -99,7 +80,7 @@ class Query(graphene.ObjectType):
     me = graphene.Field(UserType)
 
     def resolve_user(self, info, id):
-        print(get_user_model().objects.get(id=id))
+        #print(get_user_model().objects.get(id=id))
         return get_user_model().objects.get(id=id)
 
     def resolve_me(self, info):

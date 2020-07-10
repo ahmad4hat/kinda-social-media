@@ -10,3 +10,6 @@ make sure the dependency are installed.
     python manage.py runserver 
 ```
 
+# todo
+1. Add message functionality
+
