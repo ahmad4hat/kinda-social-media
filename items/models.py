@@ -5,7 +5,7 @@ from django.utils.timezone import now
 
 # Create your models here.
 class Item (models.Model):
-    type = models.CharField(max_length=30)
+    type = models.CharField(max_length=30,default="post")
     by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     text = models.TextField()
     date = models.DateTimeField(default=now)

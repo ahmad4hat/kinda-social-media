@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'graphene_django',  # important
     'users',
-    'items'
+    'items',
+    'chat_messages'
 ]
 
 MIDDLEWARE = [
