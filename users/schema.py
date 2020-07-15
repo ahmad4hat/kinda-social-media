@@ -78,6 +78,10 @@ class RemoveFriend(graphene.Mutation):
 class Query(graphene.ObjectType):
     user = graphene.Field(UserType, id=graphene.Int(required=True))
     me = graphene.Field(UserType)
+    users = graphene.List(UserType)
+
+    def resolve_users(self, info):
+        return get_user_model().objects.all()
 
     def resolve_user(self, info, id):
         #print(get_user_model().objects.get(id=id))
