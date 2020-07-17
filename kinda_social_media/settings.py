@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'graphene_django',  # important
     'users',
     'items',
-    'chat_messages'
+    'chat_messages',
+    'rooms'
 ]
 
 MIDDLEWARE = [
