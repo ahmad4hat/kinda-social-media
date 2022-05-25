@@ -17,7 +17,7 @@ Pillow==7.0.0
 promise==2.3
 psycopg2==2.8.4
 pycodestyle==2.5.0
-PyJWT==1.7.1
+PyJWT==2.4.0
 pylint==2.4.4
 pytz==2019.3
 Rx==1.6.1
